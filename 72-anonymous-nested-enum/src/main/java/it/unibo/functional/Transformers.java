@@ -89,12 +89,20 @@ public final class Transformers {
      * the element passes the test, and an empty list otherwise.
      *
      * @param base the elements on which to operate
-     * @param test the {@link Function} to use to test whether the elements should be selected.
+     * @param test the {@link Function} to use to test whether tphe elements should be selected.
      * @param <I> elements type
      * @return A list containing only the elements that passed the test
      */
     public static <I> List<I> select(final Iterable<I> base, final Function<I, Boolean> test) {
-        return null;
+        return flattenTransform(base, new Function<I, List<I>>(){
+            public List<I> call(final I input){
+                if(test.call(input)){
+                    return List.of(input);
+                }
+                return List.of();
+            }
+        }
+        );
     }
 
     /**
@@ -110,6 +118,10 @@ public final class Transformers {
      * @return A list containing only the elements that passed the test
      */
     public static <I> List<I> reject(final Iterable<I> base, final Function<I, Boolean> test) {
-        return null;
+        return select(base, new Function<I, Boolean>(){
+            public Boolean call(final I input){
+                return !test.call(input);
+            }
+        });
     }
 }
